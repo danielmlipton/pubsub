@@ -1,7 +1,16 @@
 {spawn, exec} = require 'child_process'
 fs	      	  = require 'fs'
 
-JSTESTDRIVER_JAR  = 'JsTestDriver-1.3.5.jar'
+# JsTestDriver-1.3.5.jar has a pretty nasty bug.  The short of it is that if
+#    you load a file like 'test/test.js' and more than one file from your cwd
+#    end that way, it loads the first one.  Since adding the qunit submodule,
+#    this was causing strange errors until I realized JsTestDriver was loading
+#    the wrong 'test/test.js'.  Reverted to the old version of JsTestDriver.
+#    More info at http://code.google.com/p/js-test-driver/issues/detail?id=223
+#     
+# Download at:
+#    http://code.google.com/p/js-test-driver/downloads/detail?name=JsTestDriver-1.3.3d.jar&can=1&q=
+JSTESTDRIVER_JAR  = 'JsTestDriver-1.3.3d.jar'
 JSTESTDRIVER_PORT = 9876
 
 option '-u', '--up',   'bring the JsTestDriver server up   (cake -u jstd)'
@@ -38,6 +47,8 @@ task 'doc', 'build the documentation', ->
 # JsTestDriver Tasks
 task 'jstd', 'tasks related to JsTestDriver', (options) ->
   if options.up
+
+    # Ugh.  If there's an error on start up, it's awfully tricky to capture.
     jstd = spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--port', JSTESTDRIVER_PORT ], {
         detached: true,
         stdio:  [ 'ignore', 'ignore', 'ignore' ]
