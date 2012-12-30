@@ -1,0 +1,205 @@
+<!DOCTYPE html>  <html> <head>   <title>PubSub.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="PubSub.html">                 PubSub.js               </a>                                           <a class="source" href="currentImplementationTest.html">                 currentImplementationTest.js               </a>                                           <a class="source" href="drift.html">                 drift.js               </a>                                           <a class="source" href="dynamicDelayTest.html">                 dynamicDelayTest.js               </a>                                           <a class="source" href="originalClock.html">                 originalClock.js               </a>                                           <a class="source" href="originalImplementationTest.html">                 originalImplementationTest.js               </a>                                           <a class="source" href="staticDelayTest.html">                 staticDelayTest.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               PubSub.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>A simple, content-based, <a href="http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">publisher subscriber pattern</a>
+implemented in javascript.</p>
+
+<h3>Why is it here?</h3>
+
+<ol>
+<li>To make testing the "drift" scenarios easier.</li>
+<li>To distract me.</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">PubSub</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        </pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Queue Constructor</h3>
+
+<p>A simple, private queuing class for storing content for subscribers.
+The constructor does not take an argument.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><strong>Example</strong>  </p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <pre><code>var queue = new Queue();
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">function</span> <span class="nx">Queue</span> <span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span> </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The private array content is stored in before it's processed.  The queue
+is first in, first out.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">_queue</span>  <span class="o">=</span> <span class="p">[],</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>This flag allows setTimeout() and setInterval() events to be processed
+sequentially.   </p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h4>Queue.push( value )</h4>
+
+<p>A privileged method (closure) to push content onto its private queue.
+Takes an object as an argument.  No validation is done on the object. 
+The object is the <em>message</em> the <em>publisher</em> is <em>broadcasting</em> to the
+<em>subscribers</em>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <pre><code>queue.push( { 'Sample message.' } );
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">push</span>   <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>  <span class="nx">_queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span> <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h4>Queue.shift()</h4>
+
+<p>A priviledged method (closure) to shift content from the queue.  Takes no
+arguments and returns the object stored at the first position in the
+queue.  </p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p><a id="queue.shift" />
+<strong>Example</strong> </p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <pre><code>// This is the pattern used inside of a callback for synchronous
+// processing of the queue.
+var message = queue.shift();
+if (message) {
+    console.log( message );  
+    queue.finish();
+}
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">shift</span>  <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>The algorithm here is if there is no callback currently processing the
+queue and there are items in the queue, then mark the queue as being
+processed and return the next item from the queue.  Otherwise, there's 
+nothing to see here.</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_processing</span> <span class="o">&amp;&amp;</span> <span class="nx">_queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">_processing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="nx">_queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h4>Queue.finish()</h4>
+
+<p>A priviledged method (closure) that sets the processing flag to false.
+I don't know why I was hellbent on making this private, but this is just
+sugar coating for telling the queue the currently executing callback
+is done.  See example for <a href="#queue.shift">Queue.shift</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">finish</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">};</span>
+        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>PubSub Constructor</h3>
+
+<p>Creates a new PubSub object.</p>
+
+<h4>Priviledged Methods:</h4>
+
+<ol>
+<li><a href="#pubsub.getSubscribers">PubSub.getSubscribers()</a></li>
+<li><a href="#pubsub.setSubscriber">PubSub.setSubscriber()</a></li>
+<li><a href="#pubsub.deleteSubscruibe">PubSub.deleteSubscriber()</a></li>
+<li><a href="#pubsub.broadcast">PubSub.broadcast()</a></li>
+</ol>
+
+<h4>Public Methods:</h4>
+
+<ol>
+<li><a href="#pubsub.subscribe">PubSub.subscribe()</a></li>
+<li><a href="#pubsub.publish">PubSub.publish()</a></li>
+<li><a href="#pubsub.unsubscribe">PubSub.unsubscribe()</a></li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <pre><code>var pubsub = new PubSub()
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">function</span> <span class="nx">PubSub</span><span class="p">()</span> <span class="p">{</span>
+
+            <span class="cm">/*\</span>
+<span class="cm">            |*| This really doesn&#39;t need to be in production code, but once </span>
+<span class="cm">            |*| bitten, twice shy of 80&#39;s hair bands and their pyrotechnics.</span>
+<span class="cm">            \*/</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">callee</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Constructor called as a function&#39;</span><span class="p">);</span>
+            <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>This object holds the subscribers and queues.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="kd">var</span> <span class="nx">_content</span> <span class="o">=</span> <span class="p">{},</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>The unique id of each subscriber and becaomes the token by which subscribers
+can be identified and deleted.  This is only used when deleting a subscriber.</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">_subscriberUid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p><a id="pubsub.getSubscribers" /></p>
+
+<h4>PubSub.getSubscribers()</h4>
+
+<p>A priviledged method (closure) that returns the list of subscribers and
+queues associated with the given key.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <pre><code>var topicSubscribers = pubsub.getSubscribers( 'Topic' );
+
+// This is currently only used to delete subscribers.
+var allSubscribers   = pubsub.getSubscribers();
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">getSubscribers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">key</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">key</span> <span class="o">?</span> <span class="nx">_content</span><span class="p">[</span> <span class="nx">key</span> <span class="p">]</span> <span class="o">:</span> <span class="nx">_content</span><span class="p">;</span>
+            <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p><a id="pubsub.setSubscriber" /></p>
+
+<h4>PubSub.setSubscriber()</h4>
+
+<p>A priviledged method (closure) that creates or sets the value of a
+subscriber.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <pre><code>pubsub.setSubscriber( 'Topic', {
+    callback: function () { console.log( arguments ) }
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">setSubscriber</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_content</span><span class="p">[</span> <span class="nx">key</span> <span class="p">])</span> <span class="p">{</span>
+                    <span class="nx">_content</span><span class="p">[</span> <span class="nx">key</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+                <span class="p">}</span>
+                <span class="nx">value</span><span class="p">.</span><span class="nx">token</span> <span class="o">=</span> <span class="p">(</span><span class="o">++</span><span class="nx">_subscriberUid</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+                <span class="nx">_content</span><span class="p">[</span> <span class="nx">key</span> <span class="p">].</span><span class="nx">push</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="nx">value</span><span class="p">.</span><span class="nx">token</span><span class="p">;</span>
+            <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p><a id="pubsub.deleteSubscriber" /> </p>
+
+<h4>PubSub.deleteSubscriber()</h4>
+
+<p>A priviledged method (closure) that deletes a subscriber.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <pre><code>var token = pubsub.subscribe( 'Topic', {
+    callback: function () { console.log( arguments ) }
+});
+pubsub.deleteSubscriber( token );
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">deleteSubscriber</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nx">_content</span><span class="p">[</span> <span class="nx">i</span> <span class="p">].</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">j</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+            <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p><a id="pubsub.broadcast" /> </p>
+
+<h4>PubSub.broadcast()</h4>
+
+<p>A priviledged method (closure) that puts a method on the appropriate
+subscriber queues and calling the subscriber's callback methods.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <pre><code>pubsub.broadcast( 'Topic', {
+    callback: function () { console.log( arguments ) }
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">this</span><span class="p">.</span><span class="nx">broadcast</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">subscribers</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSubscribers</span><span class="p">(</span> <span class="nx">key</span> <span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">subscribers</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">subscribers</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">var</span> <span class="nx">subscriber</span> <span class="o">=</span> <span class="nx">subscribers</span><span class="p">[</span> <span class="nx">i</span> <span class="p">];</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">subscriber</span><span class="p">[</span> <span class="s1">&#39;queue&#39;</span> <span class="p">])</span> <span class="p">{</span>
+                        <span class="nx">subscriber</span><span class="p">[</span> <span class="s1">&#39;queue&#39;</span> <span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Queue</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="nx">subscriber</span><span class="p">[</span> <span class="s1">&#39;queue&#39;</span> <span class="p">].</span><span class="nx">push</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+                    <span class="nx">subscriber</span><span class="p">.</span><span class="nx">callback</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="nx">subscriber</span> <span class="p">);</span>
+                    <span class="nx">subscriber</span><span class="p">.</span><span class="nx">callback</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">};</span>
+        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p><a id="pubsub.subscribe" /> </p>
+
+<h4>PubSub.subscribe()</h4>
+
+<p>A public method that creates a queue for publishers to broadcast to and sets
+a callback method to be invoked upon publishing.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <pre><code>var token = pubsub.subscribe({
+    topic:    'Topic',
+    callback: function () { console.log( arguments ) }
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">PubSub</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">subscribe</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">options</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;options is not an object&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">topic</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;options.topic is required&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">options</span><span class="p">.</span><span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{};</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">setSubscriber</span><span class="p">(</span> <span class="nx">options</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;callback&#39;</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">callback</span>
+            <span class="p">});</span>
+
+        <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p><a id="pubsub.publish" /></p>
+
+<h4>PubSub.publish()</h4>
+
+<p>A public method that broadcasts a message to all available subscribers.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <pre><code>pubsub.publish({
+    do:    'A needle pulling thread'
+});
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre> 
+        <span class="nx">PubSub</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">publish</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;key is required&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">broadcast</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="p">);</span>
+
+        <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p><a id="pubsub.unsubscribe" /></p>
+
+<h4>PubSub.unsubscribe()</h4>
+
+<p>A public method that unsubscribes a subscriber</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p><strong>Example</strong></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <pre><code>pubsub.unsubscribe( token );
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="cm">/*\</span>
+<span class="cm">        |*| This.  Is.  (not)  Sparta.</span>
+<span class="cm">        \*/</span>
+        <span class="nx">PubSub</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">unsubscribe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">token</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSubscribers</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="k">in</span> <span class="nx">content</span><span class="p">[</span> <span class="nx">i</span> <span class="p">])</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">[</span> <span class="nx">i</span> <span class="p">][</span> <span class="nx">j</span> <span class="p">][</span> <span class="s1">&#39;token&#39;</span> <span class="p">]</span> <span class="o">===</span> <span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="nx">deleteSubscriber</span><span class="p">(</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="k">return</span> <span class="nx">PubSub</span><span class="p">;</span>
+
+    <span class="p">})();</span>
+
+<span class="p">}).</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

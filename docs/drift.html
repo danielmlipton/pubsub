@@ -1,0 +1,198 @@
+<!DOCTYPE html>  <html> <head>   <title>drift.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="PubSub.html">                 PubSub.js               </a>                                           <a class="source" href="currentImplementationTest.html">                 currentImplementationTest.js               </a>                                           <a class="source" href="drift.html">                 drift.js               </a>                                           <a class="source" href="dynamicDelayTest.html">                 dynamicDelayTest.js               </a>                                           <a class="source" href="originalClock.html">                 originalClock.js               </a>                                           <a class="source" href="originalImplementationTest.html">                 originalImplementationTest.js               </a>                                           <a class="source" href="staticDelayTest.html">                 staticDelayTest.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               drift.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Clock</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/clock&#39;</span><span class="p">).</span><span class="nx">Clock</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">originalClock</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./originalClock&#39;</span><span class="p">).</span><span class="nx">OriginalClock</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">PubSub</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./PubSub&#39;</span><span class="p">).</span><span class="nx">PubSub</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s1">&#39;assert&#39;</span> <span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">now</span>      <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">();</span> <span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">staticDelayTest</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>console.log( 'Starting staticDelayTest...', content );</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="nx">now</span><span class="p">(),</span>
+            <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">that</span>  <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+            <span class="nx">id</span>    <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span>
+                <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="nx">count</span> <span class="o">&gt;=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">clearInterval</span><span class="p">(</span> <span class="nx">id</span> <span class="p">);</span>
+                        <span class="kd">var</span> <span class="nx">expected</span> <span class="o">=</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="o">*</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span>
+                        <span class="kd">var</span> <span class="nx">actual</span> <span class="o">=</span> <span class="p">(</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>console.log( 'Results staticDelayTest...', content );
+console.log( 'Expected total: ', expected, ' seconds' );
+console.log( 'Actual total: ', actual, ' seconds' );</p>             </td>             <td class="code">               <div class="highlight"><pre>                        <span class="nx">notWithinOnePercent</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">);</span>
+                        <span class="nx">that</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">finish</span><span class="p">();</span>
+                        <span class="nx">that</span><span class="p">.</span><span class="nx">callback</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">},</span> <span class="nx">content</span><span class="p">.</span><span class="nx">delay</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">dynamicDelayTest</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>console.log( 'Starting dynamicDelayTest...', content );</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">time</span>    <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">start</span>   <span class="o">=</span> <span class="nx">now</span><span class="p">(),</span>
+            <span class="nx">count</span>   <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">that</span>    <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="kd">function</span> <span class="nx">instance</span><span class="p">()</span> <span class="p">{</span>
+
+            <span class="nx">time</span> <span class="o">+=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">delay</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span> <span class="o">-</span> <span class="nx">time</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="nx">count</span> <span class="o">&gt;=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">expected</span> <span class="o">=</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="o">*</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+                <span class="kd">var</span> <span class="nx">actual</span>   <span class="o">=</span> <span class="p">(</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>console.log( 'Results dynamicDelayTest...', content );
+console.log( 'Expected total: ', expected, ' seconds' );
+console.log( 'Actual total: ', actual, ' seconds' );</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">withinOnePercent</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">);</span>
+                <span class="nx">that</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">finish</span><span class="p">();</span>
+                <span class="nx">that</span><span class="p">.</span><span class="nx">callback</span><span class="p">();</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">instance</span><span class="p">,</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="o">-</span> <span class="nx">diff</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">instance</span><span class="p">,</span> <span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="p">);</span>
+
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">originalImplementationTest</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>console.log( 'Starting originalImplementationTest...', content );</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">start</span>   <span class="o">=</span> <span class="nx">now</span><span class="p">(),</span>
+            <span class="nx">clock</span>   <span class="o">=</span> <span class="k">new</span> <span class="nx">originalClock</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="p">}</span> <span class="p">),</span>
+            <span class="nx">id</span>      <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span> 
+                <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">clearInterval</span><span class="p">(</span> <span class="nx">id</span> <span class="p">);</span>
+                    <span class="kd">var</span> <span class="nx">expected</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span>
+                    <span class="kd">var</span> <span class="nx">actual</span> <span class="o">=</span> <span class="p">(</span><span class="nx">clock</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>console.log( 'Results originalImplementationTest...', content );
+console.log( 'Expected total: ', expected, ' seconds' );
+console.log( 'Actual total: ', actual, ' seconds' );</p>             </td>             <td class="code">               <div class="highlight"><pre>                    <span class="nx">notWithinOnePercent</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">);</span>
+                    <span class="nx">clock</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">finish</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">();</span>
+                <span class="p">}).</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span> <span class="p">),</span>
+                <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">currentImplementationTest</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>console.log( 'Starting currentImplementationTest...', content );</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">start</span>   <span class="o">=</span> <span class="nx">now</span><span class="p">(),</span>
+            <span class="nx">clock</span>   <span class="o">=</span> <span class="k">new</span> <span class="nx">Clock</span><span class="p">(</span> <span class="p">{</span> <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="nx">content</span><span class="p">.</span><span class="nx">delay</span> <span class="p">}</span> <span class="p">),</span>
+            <span class="nx">id</span>      <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span> 
+                <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">clearInterval</span><span class="p">(</span> <span class="nx">id</span> <span class="p">);</span>
+                    <span class="kd">var</span> <span class="nx">expected</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span>
+                    <span class="kd">var</span> <span class="nx">actual</span> <span class="o">=</span> <span class="p">(</span><span class="nx">clock</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>console.log( 'Results currentImplementationTest...', content );
+console.log( 'Expected total: ', expected, ' seconds' );
+console.log( 'Actual total: ', actual, ' seconds' );</p>             </td>             <td class="code">               <div class="highlight"><pre>                    <span class="nx">withinOnePercent</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">);</span>
+                    <span class="nx">clock</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">finish</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">();</span>
+                <span class="p">}).</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span> <span class="p">),</span>
+                <span class="nx">content</span><span class="p">.</span><span class="nx">max</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">withinOnePercent</span> <span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span>
+        <span class="nx">essentiallyEqual</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span><span class="p">,</span> <span class="mf">0.01</span> <span class="p">),</span>
+        <span class="s2">&quot;Expected: &quot;</span> <span class="o">+</span> <span class="nx">expected</span> <span class="o">+</span> <span class="s1">&#39;, Actual: &#39;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">notWithinOnePercent</span> <span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span>
+        <span class="o">!</span><span class="nx">essentiallyEqual</span><span class="p">(</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">actual</span><span class="p">,</span> <span class="mf">0.01</span> <span class="p">),</span>
+        <span class="s2">&quot;Expected: &quot;</span> <span class="o">+</span> <span class="nx">expected</span> <span class="o">+</span> <span class="s1">&#39;, Actual: &#39;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">);</span>
+<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>http://mattsnider.com/approximately-and-essentially-equal/</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">function</span> <span class="nx">essentiallyEqual</span><span class="p">(</span><span class="cm">/* float */</span> <span class="nx">a</span><span class="p">,</span> <span class="cm">/* float */</span> <span class="nx">b</span><span class="p">,</span> <span class="cm">/* float */</span> <span class="nx">epsilon</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">a</span><span class="p">),</span> <span class="nx">B</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+    <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">A</span> <span class="o">-</span> <span class="nx">B</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nx">A</span> <span class="o">&gt;</span> <span class="nx">B</span> <span class="o">?</span> <span class="nx">B</span> <span class="o">:</span> <span class="nx">A</span><span class="p">)</span> <span class="o">*</span> <span class="nx">epsilon</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PubSub</span><span class="p">();</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">({</span>
+    <span class="s1">&#39;topic&#39;</span><span class="o">:</span>       <span class="s1">&#39;staticDelayTest&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;callback&#39;</span><span class="o">:</span>     <span class="nx">staticDelayTest</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">({</span>
+    <span class="s1">&#39;topic&#39;</span><span class="o">:</span>       <span class="s1">&#39;dynamicDelayTest&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;callback&#39;</span><span class="o">:</span>     <span class="nx">dynamicDelayTest</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">({</span>
+    <span class="s1">&#39;topic&#39;</span><span class="o">:</span>       <span class="s1">&#39;originalImplementationTest&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;callback&#39;</span><span class="o">:</span>     <span class="nx">originalImplementationTest</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">({</span>
+    <span class="s1">&#39;topic&#39;</span><span class="o">:</span>       <span class="s1">&#39;currentImplementationTest&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;callback&#39;</span><span class="o">:</span>     <span class="nx">currentImplementationTest</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;staticDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;staticDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;staticDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;dynamicDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;dynamicDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;dynamicDelayTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;originalImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;originalImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;originalImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">1000</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;currentImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;currentImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">});</span>
+
+<span class="nx">ps</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="s1">&#39;currentImplementationTest&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;max&#39;</span><span class="o">:</span>     <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;delay&#39;</span><span class="o">:</span> <span class="mi">1000</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
