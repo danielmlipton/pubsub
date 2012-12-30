@@ -3,7 +3,19 @@ QUnitAdapter
 
 Run qunit tests using Google's JS Test Driver. Maps async methods stop() and start().
 
-This provides almost the same api as qunit. Extended from original adapter by Karl Okeeffe. 
+This provides almost the same api as qunit. Extended from original adapter by Karl Okeeffe.
+
+Originally from:
+
+https://github.com/exnor/QUnit-to-JsTestDriver-adapter
+
+Minor additions:
+
+ * support for throws
+ * support for QUnit.module
+ * fixed the scoping issue for capturedAssertions
+ * discovered a bug with defer() and raises/throws (not yet fixed)
+
 */
 (function() {
     if(!(window.equiv)) {
@@ -44,30 +56,14 @@ This provides almost the same api as qunit. Extended from original adapter by Ka
 			for (var i = 0; i < assertions.length; i++) {
 			    originalAssertions[assertions[i]] = window[assertions[i]];
 			}
-
-			window.ok = function() { capturedAssertions.push(['ok', arguments]) };
-			window.equal = function() { capturedAssertions.push(['equal', arguments]) };
-			window.notEqual = function() { capturedAssertions.push(['notEqual', arguments]) };
-			window.deepEqual = function() { capturedAssertions.push(['deepEqual', arguments]) };
-			window.notDeepEqual = function() { capturedAssertions.push(['notDeepEqual', arguments]) };
-			window.strictEqual = function() { capturedAssertions.push(['strictEqual', arguments]) };
-			window.notStrictEqual = function() { capturedAssertions.push(['notStrictEqual', arguments]) };
-
-			// window.raises is deprecated by window.throws:
-			// https://github.com/jquery/qunit/issues/267
-			window.throws = window.raises = function() { capturedAssertions.push(['raises', arguments]) };
-
-			// This could be a more efficient way of doing the above, but can't achieve correct scope
-			// capturedAssertions.push() is called upon function call rather than upon setup,
-			// so actual values never enter the array, only 'undefined'
-			/*
-			  for (var i = 0; i < assertions.length; i += 1) {
-			  window[assertions[i]] = function() {
-			  capturedAssertions.push([assertions[i], arguments]);
-			  };
-			  }
-			*/
-
+			
+			for (var i = 0; i < assertions.length; i += 1) {
+				var assertion = assertions[ i ];
+				window[assertion] = function() {
+					capturedAssertions.push([assertion, arguments]);
+				};
+			}
+			
 			// Sets up test to resume when `start()` is called.
 			q.defer('start()', function(pool) {
 				var origStart = window.start;
