@@ -10,7 +10,8 @@ fs	      	  = require 'fs'
 #     
 # Download at:
 #    http://code.google.com/p/js-test-driver/downloads/detail?name=JsTestDriver-1.3.3d.jar&can=1&q=
-JSTESTDRIVER_JAR  = 'JsTestDriver-1.3.3d.jar'
+JSTESTDRIVER_JAR  = 'resources/js-test-driver/JsTestDriver-1.3.3d.jar'
+JSTESTDRIVER_CONF = 'resources/js-test-driver/jsTestDriver.conf'
 JSTESTDRIVER_PORT = 9876
 
 option '-u', '--up',   'bring the JsTestDriver server up   (cake -u jstd)'
@@ -49,7 +50,7 @@ task 'jstd', 'tasks related to JsTestDriver', (options) ->
   if options.up
 
     # Ugh.  If there's an error on start up, it's awfully tricky to capture.
-    jstd = spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--port', JSTESTDRIVER_PORT ], {
+    jstd = spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--config', JSTESTDRIVER_CONF, '--port', JSTESTDRIVER_PORT ], {
         detached: true,
         stdio:  [ 'ignore', 'ignore', 'ignore' ]
     } 
@@ -75,6 +76,6 @@ task 'jstd', 'tasks related to JsTestDriver', (options) ->
 # Test Tasks
 task 'test', 'run tests', (options)->
   if options.jstd or options.all
-    log spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--tests', 'all', '--reset' ]
+    log spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--config', JSTESTDRIVER_CONF, '--tests', 'all', '--reset' ]
   if !options.jstd or options.all
     log spawn 'qunit', [ '-c', 'src/PubSub.js', '-t', 'test/test.js' ]
