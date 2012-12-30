@@ -8,4 +8,4 @@ coverage-1.3.5.jar
 coverage-1.3.5.serve-patch.jar
 jsTestDriver.conf
 test/equiv.js
-test/qunit-1.10.0.js
+jstd.pid
