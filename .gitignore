@@ -7,6 +7,5 @@ JsTestDriver-1.3.5.jar
 coverage-1.3.5.jar
 coverage-1.3.5.serve-patch.jar
 jsTestDriver.conf
-test/drift/QUnitAdapter.js
-test/drift/equiv.js
-test/drift/qunit-1.10.0.js
+test/equiv.js
+test/qunit-1.10.0.js
