@@ -4,12 +4,11 @@
 node_modules
 # JsTestDriver polution.  Do not commit.
 JsTestDriver-1.3.5.jar
-#JsTestDriver-1.3.3d.jar
+JsTestDriver-1.3.3d.jar
 coverage-1.3.5.jar
-#coverage-1.3.5.serve-patch.jar
-#jsTestDriver.conf
-#test/equiv.js
+coverage-1.3.5.serve-patch.jar
+equiv.js
 jstd.pid
-#test/sinon.js
-#test/sinon-qunit.js
+sinon.js
+sinon-qunit.js
 run-qunit.js
