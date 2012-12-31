@@ -1,0 +1,24 @@
+{
+    "name": "pubsub",
+    "preferGlobal": "false",
+    "version": "0.1.0",
+    "author": "Daniel M. Lipton <daniel@mlipton.com>",
+    "description": "A simple, content-based publisher subscriber pattern implemented in JavaScript.",
+    "scripts": {
+        "test": "cake test"
+    },
+    "main": "./lib/PubSub.js",
+    "repository": {
+        "type": "git",
+        "url":  "git@github.com:danielmlipton/pubsub.git"
+    },
+    "devDependencies": {
+        "qunit":         "0.5.x",
+        "docco":         "0.4.x",
+    },
+    "analyze": false,
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.6"
+    }
+}
