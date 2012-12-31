@@ -13,8 +13,8 @@
         "url":  "git@github.com:danielmlipton/pubsub.git"
     },
     "devDependencies": {
-        "qunit":         "0.5.x",
         "docco":         "0.4.x",
+        "coffee-script": "1.4.x"
     },
     "analyze": false,
     "license": "MIT",
