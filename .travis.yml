@@ -6,9 +6,7 @@ jdk:
   - oraclejdk7
 
 before_install:
-  - "sudo add-apt-repository ppa:webupd8team/java"
-  - "sudo apt-get update"
-  - "sudo apt-get install oracle-java7-installer"
+  - "sudo apt-get install openjdk-6-jdk"
 
 before_script:
   - "cake -u jstd"
