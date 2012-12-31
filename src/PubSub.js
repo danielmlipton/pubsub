@@ -154,7 +154,12 @@
 //     });
 //     pubsub.deleteSubscriber( token );
             this.deleteSubscriber = function ( i, j ) {
-                return _content[ i ].splice( j, 1 ) ? true : false;
+                if (typeof _content[ i ] === 'object' &&
+                    _content[ i ].splice( j, 1 ).length == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
             };
 
 // <a id="pubsub.broadcast" /> 
@@ -179,7 +184,11 @@
                     }
                     subscriber[ 'queue' ].push( value );
                     subscriber.callback.bind( subscriber );
-                    subscriber.callback();
+                    try {
+                        subscriber.callback();
+                    } catch (e) {
+                        /* Fail silently?  That seems like a bad idea. */
+                    }
                 }
                 return true;
             };
@@ -206,6 +215,9 @@
             }
             if (!options.callback) {
                 options.callback = function () {};
+            }
+            if (typeof options.callback !== 'function') {
+                throw new Error( 'options.callback is not a function' );
             }
             return this.setSubscriber( options.topic, {
                 'callback': options.callback
@@ -249,9 +261,11 @@
                 for (var j in content[ i ]) {
                     if (content[ i ][ j ][ 'token' ] === token) {
                         this.deleteSubscriber( i, j );
+                        return true;
                     }
                 }
             }
+            return false;
         };
 
         return PubSub;
