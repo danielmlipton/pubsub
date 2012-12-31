@@ -12,3 +12,4 @@ coverage-1.3.5.jar
 jstd.pid
 #test/sinon.js
 #test/sinon-qunit.js
+run-qunit.js
