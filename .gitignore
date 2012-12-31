@@ -6,7 +6,7 @@ node_modules
 JsTestDriver-1.3.5.jar
 JsTestDriver-1.3.3d.jar
 coverage-1.3.5.jar
-coverage-1.3.5.serve-patch.jar
+#coverage-1.3.5.serve-patch.jar
 equiv.js
 jstd.pid
 sinon.js
