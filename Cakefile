@@ -16,8 +16,8 @@ JSTESTDRIVER_PORT = 9876
 
 option '-u', '--up',   'bring the JsTestDriver server up   (cake -u jstd)'
 option '-d', '--down', 'bring the JsTestDriver server down (cake -d jstd)'
-option '-j', '--jstd', 'run the JsTestDriver tests         (cake -j test)'
-option '-a', '--all',  'run all of the JsTestDriver tests  (cake -a test)'
+#option '-j', '--jstd', 'run the JsTestDriver tests         (cake -j test)'
+#option '-a', '--all',  'run all of the JsTestDriver tests  (cake -a test)'
 
 log = (childProcess) ->
 
@@ -75,7 +75,8 @@ task 'jstd', 'tasks related to JsTestDriver', (options) ->
 
 # Test Tasks
 task 'test', 'run tests', (options)->
-  if options.jstd or options.all
-    log spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--config', JSTESTDRIVER_CONF, '--tests', 'all', '--reset' ]
-  if !options.jstd or options.all
-    log spawn 'qunit', [ '-c', 'src/PubSub.js', '-t', 'test/test.js' ]
+  # TODO: Integrate this with travis-ci.org
+  #if options.jstd or options.all
+  log spawn 'java', [ '-jar', JSTESTDRIVER_JAR, '--config', JSTESTDRIVER_CONF, '--tests', 'all', '--reset' ]
+  #if !options.jstd or options.all
+  #  log spawn 'qunit', [ '-c', 'src/PubSub.js', '-t', 'test/test.js' ]
