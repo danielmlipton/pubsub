@@ -3,4 +3,4 @@ node_js:
   - 0.6
 
 before_script:
-  - "java -jar resources/js-test-driver/JsTestDriver-1.3.3d.jar --basePath ./resources/js-test-driver --config resources/js-test-driver/jsTestDriver.conf --port 9876"
+  - "java -jar resources/js-test-driver/JsTestDriver-1.3.3d.jar --basePath ./resources/js-test-driver --config resources/js-test-driver/jsTestDriver.conf --port 9876 &"

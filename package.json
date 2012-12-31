@@ -5,16 +5,12 @@
     "author": "Daniel M. Lipton <daniel@mlipton.com>",
     "description": "A simple, content-based publisher subscriber pattern implemented in JavaScript.",
     "scripts": {
-        "test": "cake test"
+        "test": "java -jar resources/js-test-driver/JsTestDriver-1.3.3d.jar --basePath ./resources/js-test-driver --config resources/js-test-driver/jsTestDriver.conf --tests all --reset"
     },
     "main": "./lib/PubSub.js",
     "repository": {
         "type": "git",
         "url":  "git@github.com:danielmlipton/pubsub.git"
-    },
-    "devDependencies": {
-        "docco":         "0.4.x",
-        "coffee-script": "1.4.x"
     },
     "analyze": false,
     "license": "MIT",
