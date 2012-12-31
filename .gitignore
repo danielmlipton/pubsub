@@ -10,3 +10,5 @@ coverage-1.3.5.serve-patch.jar
 jsTestDriver.conf
 test/equiv.js
 jstd.pid
+test/sinon.js
+test/sinon-qunit.js
