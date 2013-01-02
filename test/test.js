@@ -140,8 +140,6 @@ test( 'should return true with three subscribers', function() {
     // Setup
 	var topic       = 'Test Topic',
 		spy    = sinon.spy(),
-		secondSpy   = sinon.spy(),
-		thirdSpy    = sinon.spy(),
 		firstToken  = _pubsub.subscribe({
 			topic: topic,
 			callback: spy
@@ -157,6 +155,31 @@ test( 'should return true with three subscribers', function() {
 
 	equal( _pubsub.publish( topic ), true, 'publish( topic ) returns true' );
     ok( spy.calledThrice, 'spy called exactly three times' );
+
+});
+
+test( 'should only call subscribers of the published topic', function () {
+
+	expect( 2 );
+
+    // Setup
+	var firstTopic  = 'Test Topic',
+		secondTopic = 'Another Test Topic',
+		firstSpy    = sinon.spy(),
+		secondSpy   = sinon.spy(),
+		firstToken  = _pubsub.subscribe({
+			topic: firstTopic,
+			callback: firstSpy
+		}),
+		secondToken = _pubsub.subscribe({
+			topic: secondTopic,
+			callback: secondSpy
+		});
+
+    _pubsub.publish( firstTopic, {} );
+
+	ok( firstSpy.calledOnce, 'firstSpy called exactly once' );
+    equal( secondSpy.callCount, 0, 'secondSpy not called' );
 
 });
 
