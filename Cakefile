@@ -40,7 +40,7 @@ task 'lint', 'run jsl on src/PubSub.js', ->
 # Doc Tasks
 task 'doc', 'build the documentation', ->
   exec([
-    'node_modules/docco/bin/docco -o docs src/*.js'
+    'docco -o docs src/*.js'
   ].join(' && '), (err) ->
     throw err if err
   )
