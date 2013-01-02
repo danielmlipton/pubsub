@@ -2,13 +2,18 @@
 .DS_Store
 # Do not commit local node modules.
 node_modules
+# Tell the world that I use Sublime.
+pubsub.sublime-project
+pubsub.sublime-workspace
+# Needed for travis-ci.org
+# coverage-1.3.5.serve-patch.jar
 # JsTestDriver polution.  Do not commit.
 JsTestDriver-1.3.5.jar
 JsTestDriver-1.3.3d.jar
 coverage-1.3.5.jar
-#coverage-1.3.5.serve-patch.jar
 equiv.js
 jstd.pid
 sinon.js
 sinon-qunit.js
 run-qunit.js
+
