@@ -16,4 +16,6 @@ jstd.pid
 sinon.js
 sinon-qunit.js
 run-qunit.js
+test/qunit
+resources/js-test-driver-phantomjs
 
