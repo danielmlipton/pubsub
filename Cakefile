@@ -35,11 +35,10 @@ task 'lint', 'run jsl on src/PubSub.js', ->
 
 # Doc Tasks
 task 'doc', 'build the documentation', ->
-  exec([
-    'docco -o docs src/*.js'
-  ].join(' && '), (err) ->
-    throw err if err
-  )
+  execFile 'docco', [ '-m', '-o', 'docs', 'src/*.js' ], (error, stdout, stderr) ->
+    throw error if error
+    fs.rename 'docs/PubSub.md', 'README.md', (err) ->
+      throw err if err
 
 # JsTestDriver Tasks
 task 'jstd', 'tasks related to JsTestDriver', (options) ->

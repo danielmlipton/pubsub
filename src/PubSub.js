@@ -1,8 +1,5 @@
 // A simple, content-based, [publisher subscriber pattern](http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
 // implemented in javascript.
-// ### Why is it here?
-// 1.  To make testing the "drift" scenarios easier.
-// 2.  To distract me.
 (function() {
 
     this.PubSub = (function() {
