@@ -59,6 +59,7 @@ Creates a new PubSub object.
 2.  [PubSub.setSubscriber()](#pubsub.setSubscriber)
 3.  [PubSub.deleteSubscriber()](#pubsub.deleteSubscruibe)
 4.  [PubSub.broadcast()](#pubsub.broadcast)
+
 #### Public Methods:
 1.  [PubSub.subscribe()](#pubsub.subscribe)
 2.  [PubSub.publish()](#pubsub.publish)
